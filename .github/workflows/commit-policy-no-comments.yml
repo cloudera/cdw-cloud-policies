@@ -4,7 +4,7 @@ on:
     branches:
       - 'main'
     paths:
-      - 'aws-iam-policies/doc/*-doc-*.json5'
+      - 'aws-iam-policies/docs/*-doc-*.json5'
 jobs:
   testJob:
     name: Remove Comments
