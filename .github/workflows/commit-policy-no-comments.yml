@@ -2,7 +2,7 @@ name: commit policy removing comments
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
     paths:
       - 'aws-iam-policies/doc/*-doc-*.json5'
 jobs:
