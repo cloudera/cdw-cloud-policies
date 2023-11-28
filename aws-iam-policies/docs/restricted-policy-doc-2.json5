@@ -1,0 +1,264 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "cloudformation",
+      "Effect": "Allow",
+      "Action": [
+        "acm:AddTagsToCertificate",
+        // Add owner/stack related tags to Certificate
+        "acm:DescribeCertificate",
+        // Describe Certificate created by cf to check
+        // the certification status during activation
+        "acm:RequestCertificate",
+        // Requests ACM certificate for dwx
+        "autoscaling:DescribeScalingActivities",
+        // When dwx scales up/down AutoScalingGroups
+        // dwx must check ASG activity status
+        "ec2:CreateLaunchTemplate",
+        // LaunchTemplate creates EC2 instances used
+        // by DWX
+        "ec2:CreatePlacementGroup",
+        // Placement groups launch EC2 instances in
+        // physical proximity within same AZ
+        "ec2:CreateSecurityGroup",
+        // Create Security Groups for EC2 instance
+        "ec2:DescribeAccountAttributes",
+        // Lists attributes for customer account that
+        // might be needed by cf to get quotas like
+        // vpc-max-security-groups-per-interface
+        // and supported_platforms
+        "ec2:DescribeAvailabilityZones",
+        // DWX query executors deployed among 3
+        // availibility zones that need az info
+        "ec2:DescribeLaunchTemplates",
+        // Updates sshkey to get old sshkey info from
+        // ec2 Launch Template
+        "ec2:DescribeLaunchTemplateVersions",
+        // Update sshkey using old sshkey info from
+        // ec2 Launch Template Version
+        "ec2:DescribePlacementGroups",
+        // Describes specified placement groups created
+        // during activation
+        "ec2:DescribeSecurityGroups",
+        // Tags the eks security group to get cluster
+        // security group id
+        "ec2:RevokeSecurityGroupEgress",
+        // Revoke SecurityGroupEgress authorized by cf
+        "ec2:RevokeSecurityGroupIngress",
+        // Revoke SecurityGroupIngress authorized by cf
+        "ec2:RunInstances",
+        //Essential to run the EC2 instance
+        "ec2:DeleteLaunchTemplate",
+        // Delete LaunchTemplate created by cf
+        "ec2:DeletePlacementGroup",
+        // Delete Placement Groups created by cf
+        "elasticfilesystem:DescribeMountTargets",
+        // Called by CF while creating EFS
+        "elasticfilesystem:DescribeFileSystems"
+        // Called by CF while creating EFS
+      ],
+      "Resource": "*",
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "aws:CalledVia": "cloudformation.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "CFResourceTag",
+      "Resource": "*",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:AuthorizeSecurityGroupEgress",
+        // Adds outbound rules to security group for
+        // use with VPC
+        "ec2:AuthorizeSecurityGroupIngress",
+        //A dds inbound rules to security group
+        // for use with VPC
+        "ec2:RevokeSecurityGroupEgress",
+        // Revoke SecurityGroupEgress authorized by cf
+        "ec2:RevokeSecurityGroupIngress",
+        // Revoke SecurityGroupIngress authorized by cf
+        "autoscaling:DeleteAutoScalingGroup",
+        // Delete sharedservices and compute
+        // autoscaling groups--created/deleted with
+        // cloudformation stack
+        "ec2:DeleteSecurityGroup",
+        // Delete NodeSecurityGroup,
+        // ClusterControlPlaneSecurityGroup,
+        // DB Security Group created via cf stack
+        "eks:DeleteCluster"
+        // Delete EKS cluster created via cf
+      ],
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "aws:CalledVia": "cloudformation.amazonaws.com"
+        },
+        "StringLike": {
+          "aws:ResourceTag/Cloudera-Resource-Name": "crn:cdp:*"
+        }
+      }
+    },
+    {
+      "Sid": "CFRequestTag",
+      "Resource": "*",
+      "Effect": "Allow",
+      "Action": [
+        "kms:TagResource",
+        // Add owner/stack related tags to kms
+        "logs:CreateLogGroup"
+        // Create/name cloudwatch log group
+      ],
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "aws:CalledVia": "cloudformation.amazonaws.com"
+        },
+        "StringLike": {
+          "aws:RequestTag/Cloudera-Resource-Name": "crn:cdp:*"
+        }
+      }
+    },
+    {
+      "Sid": "CFDatabase",
+      "Resource": [
+        "arn:aws:rds:*:*:db:env-*-dwx-stack-rds",
+        "arn:aws:rds:*:*:subgrp:env-*-dwx-stack-dbsubnetgroup-*"
+      ],
+      "Effect": "Allow",
+      "Action": [
+        "rds:CreateDBInstance",
+        // The RDBS (postgres) created to store dwx
+        // cluster info during activation
+        "rds:DescribeDBInstances",
+        // Describe RDBS (postgres) instance created by
+        // cf, used to detect quota of DB instance
+        "rds:CreateDBSubnetGroup",
+        // The DBSubnetGroup created during activation
+        "rds:DescribeDBSubnetGroups",
+        // Describe DBSubnetGroup instance created by cf
+        "rds:ListTagsForResource"
+        // Lists tags on RDS DBsubnetgroup. Required for Cloudformation operations
+
+      ],
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "aws:CalledVia": "cloudformation.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "CFEksCluster",
+      "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks",
+      "Effect": "Allow",
+      "Action": [
+        "eks:CreateCluster",
+        // Creates eks cluster upon activation
+        // that dwx can deploy resources on
+        "eks:DescribeCluster"
+        // DWX keeps track of eks cluster created
+        // during env activation
+      ],
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "aws:CalledVia": "cloudformation.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "CFCloudwatch",
+      "Resource": "arn:aws:eks:*::log-group:/aws/eks/env-*-dwx-stack-eks/cluster:*",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogStream",
+        // Create log stream of log group that
+        // originates from monitored application
+        // or resource
+        "logs:DescribeLogStreams",
+        // List log streams for log groups
+        "logs:PutLogEvents",
+        // Upload log events to log stream
+        "logs:PutRetentionPolicy"
+        // Change number of days Cloudwatch retains
+      ],
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "aws:CalledVia": "cloudformation.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "CFKeys",
+      "Resource": "*",
+      "Effect": "Allow",
+      "Action": [
+        "kms:CreateAlias",
+        // kms key id hard to recognize so an alias is
+        // created, e.g. "env-xxxxxx-dwx-stack-kms-key"
+        "kms:DeleteAlias",
+        // Delete the kms alias created by cf
+        "kms:DescribeKey",
+        // Describe the KMS key created during
+        // activation
+        "kms:EnableKeyRotation",
+        // Allow rotation of kms key after expiration
+        "kms:GenerateDataKey",
+        // Returns unique symmetric data key in plain
+        // text for use outside AWS KMS
+        "kms:GenerateDataKeyWithoutPlaintext",
+        // Return unique symmetric encrypted data key
+        // for use outside of AWS KMS
+        "kms:ScheduleKeyDeletion"
+        // Schedule deletion of KMS key, rotate to new
+        // key
+      ],
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "aws:CalledVia": "cloudformation.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "CFFileSystem",
+      "Resource": "*",
+      "Effect": "Allow",
+      "Action": [
+        "elasticfilesystem:CreateMountTarget",
+        //Create 3 EFS mount targets for 3 AZs
+        "elasticfilesystem:DeleteFileSystem",
+        // Delete EFS file system during deactivation via cf
+        "elasticfilesystem:DeleteMountTarget"
+        // Delete all the 3 EFS mount targets
+      ],
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "aws:CalledVia": "cloudformation.amazonaws.com"
+        },
+        "StringLike": {
+          "aws:ResourceTag/clusterId": "env-*"
+        }
+      }
+    },
+    {
+      "Sid": "AllowSsmParams",
+      "Effect": "Allow",
+      "Action": [
+        "ssm:DescribeParameters",
+        "ssm:GetParameter",
+        "ssm:GetParameters",
+        "ssm:GetParameterHistory",
+        "ssm:GetParametersByPath"
+        // these set of permissions is used by cloudformation
+        // to obtain the latest AMI during stack create and upgrade
+      ],
+      "Resource": [
+        "arn:aws:ssm:*:*:parameter/aws/service/eks/optimized-ami/*"
+      ],
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "aws:CalledVia": "cloudformation.amazonaws.com"
+        }
+      }
+    }
+  ]
+}

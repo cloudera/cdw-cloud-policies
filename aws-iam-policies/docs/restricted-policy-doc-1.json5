@@ -1,0 +1,296 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ResourceTag",
+      // Control access to AWS serviceresources based on
+      // resource tags using ResourceTag/key-name
+      // condition key to allow access to resource or not
+      // based on resource tagging
+      // new
+      "Effect": "Allow",
+      "Action": [
+        "acm:DeleteCertificate",
+        // Delete certificate attached to ELB
+        // created/deleted with cloudformation stack
+        "autoscaling:SuspendProcesses",
+        // Suspend AZRebalance for autoscaling group;
+        // include AZRebalance; cannot suspend
+        // AZRebalance in cloudformation; edit/update
+        // ASGs with AWS API to avoid AWS re-balancing
+        // nodes for AZ (most nodes run in
+        // stateful/critical pods)
+        "autoscaling:UpdateAutoScalingGroup",
+        // Calico overlaynetwork option requires no EKS
+        // nodes up on installation; with CF stack
+        // creation 3 nodes start up, autoscaling group
+        // updates desired capacity to Zero via AWS API;
+        // need latest SSH key from CloudBreak for EKS
+        // node updates; new Launch template passes
+        // SSH key and updates in ASG
+        "cloudformation:DeleteStack",
+        // Delete the cf stack created
+        "cloudformation:DescribeStackEvents",
+        // Get cf stack events, identify cause of failed
+        // cf stack creation failure
+        "elasticfilesystem:PutFileSystemPolicy",
+        // While creating EFS Filesystem give
+        // permission to attach FileSystem Policy
+        // for Client access via MountTarget and
+        // Encryption In transit
+        "rds:DeleteDBInstance",
+        // Delete DB instance used to store
+        // Metastore/Hive/Impala/Hue query data
+        "rds:DeleteDBSecurityGroup",
+        // Delete DB security group created via cf
+        "rds:DeleteDBSubnetGroup",
+        // Delete DB Subnet group created via cf
+        "ec2:DeleteKeypair"
+        // Delete keypair while deactivating CDW
+        // needed if CB env ssh is not reused
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringLike": {
+          "aws:ResourceTag/Cloudera-Resource-Name": "crn:cdp:*"
+        }
+      }
+    },
+    {
+      "Sid": "RequestTag",
+      "Effect": "Allow",
+      "Action": [
+        "autoscaling:CreateAutoScalingGroup",
+        //Create autoscaling groups for cluster
+        "cloudformation:CreateStack",
+        // Activate createstack mainly with
+        // cloudformation
+        "eks:TagResource",
+        // Tag eks cluster, e.g.: clusterId,
+        // envId, clustername, accountId...
+        "elasticfilesystem:CreateFileSystem",
+        // Create efs storage to be used by hive and
+        // Prometheus
+        "kms:CreateGrant",
+        // Use KMS keys in cryptographic
+        // operations, e.g. in ebs
+        "kms:CreateKey",
+        // During activation KMSKey created with cf
+        "rds:AddTagsToResource",
+        // In CF when creating RDS instance tag created
+        // with stack information adds metadata tags to
+        // Amazon RDS resource for use with cost
+        // allocation reporting to track cost of Amazon
+        // resources or to use in Condition statement
+        // of IAM policy for Amazon RDS
+        "cloudformation:UpdateStack"
+        // Update Custom AMI, upgrade EKS
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringLike": {
+          "aws:RequestTag/Cloudera-Resource-Name": "crn:cdp:*"
+        }
+      }
+    },
+    {
+      "Sid": "AttachRole",
+      "Effect": "Allow",
+      "Action": "iam:AttachRolePolicy",
+      // Attach AWS managed policy ARNs to
+      // NodeInstance and EKS Service Roles
+      // See footnote 1.
+      "Resource": [
+        "arn:aws:iam::*:role/env-*-dwx-stack-EKSServiceRole-*",
+        "arn:aws:iam::*:role/env-*-dwx-stack-NodeInstanceRole-*"
+      ],
+      "Condition": {
+        "ForAnyValue:ArnEqualsIfExists": {
+          "iam:PolicyARN": [
+            "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+            "arn:aws:iam::aws:policy/AmazonEKSServicePolicy",
+            "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+            "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+            "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+            "arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "Role",
+      "Effect": "Allow",
+      "Action": [
+        "iam:AddRoleToInstanceProfile",
+        // Adds Node Instance IAM role to Ec2
+        // Node instance profile
+        "iam:CreateInstanceProfile",
+        // Creates Node Instance Profile
+        "iam:CreateRole",
+        // Creates Node Instance and EKS Service Roles
+        "iam:DeleteInstanceProfile",
+        // Delete Node Instance Profile at
+        // deactivation via cf stack creation
+        "iam:DeleteRole",
+        // Delete Node Instance and EKS Service
+        // Roles at deactivation
+        "iam:DeleteRolePolicy",
+        // Delete inline policies like efs, ebs,
+        // cluster-autoscaler etc created/attached
+        // to Node instance role at deactivation
+        "iam:DetachRolePolicy",
+        // Detach managed policy ARNs attached to Node
+        // Instance and EKS Service IAM roles at
+        // deactivation
+        "iam:GetRole",
+        // Retrieve details about Node Instance and EKS
+        // service IAM roles, recursively called by cf
+        "iam:GetRolePolicy",
+        // Get inline policy attached to Node Instance
+        // role
+        "iam:PassRole",
+        // Required permission to assign Node instance
+        // role to Ec2 Node instance profile
+        "iam:PutRolePolicy",
+        // Add inline policies like efs, ebs,
+        // cluster-autoscaler to Node Instance Role
+        "iam:RemoveRoleFromInstanceProfile"
+        //Removes IAM role from EC2 instance profile
+      ],
+      "Resource": [
+        "arn:aws:iam::*:instance-profile/env-*-dwx-stack-NodeInstanceProfile-*",
+        "arn:aws:iam::*:role/env-*-dwx-stack-EKSServiceRole-*",
+        "arn:aws:iam::*:role/env-*-dwx-stack-NodeInstanceRole-*"
+      ]
+    },
+    {
+      "Sid": "gocode",
+      "Effect": "Allow",
+      "Action": [
+        "acm:DescribeCertificate",
+        // ACM validation adds DNS records
+        "acm:ListCertificates",
+        //ACM validation adds DNS records
+        "ec2:DescribeKeyPairs",
+        // Validate CB env ssh key pair exists, not
+        // deleted inbetween; check for duplicate
+        // keypair in case of CDW created keypair
+        "ec2:DescribeDhcpOptions",
+        // See Point 2-3; see footnote 3
+        "ec2:DescribeSubnets",
+        // See Point 4 in footnote 3 URL
+        "ec2:DescribeVpcs",
+        // Validate ID of set of DHCP options
+        // associated with the VPC
+        "autoscaling:DescribeAutoScalingGroups",
+        // Get shared services/compute ASGs, update
+        // as part of AZRebalance
+        "iam:SimulatePrincipalPolicy",
+        // Simulate CF stack formation policies
+        "iam:ListAttachedRolePolicies",
+        // List policies attached to Ranger RAZ
+        // role; attach to NodeInstanceRole for
+        // S3 access if RAZ enabled and also to add cloudwatch access
+        "ec2:DescribeVpcAttribute",
+        // Validate enableDnsHostnames and
+        // enableDnsSupport VPC attributes;
+        // see 1 and 3 points in footnote 3 URL
+        "ec2:DescribeImages",
+        "ec2:CreateTags",
+        // Tag subnets and eks security group
+        // See footnote 2
+        "ec2:CreateKeyPair"
+        // Create ssh Public key pair, pass to ec2
+        // instances. Not required if passed/set/
+        // reused via CB
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "gocodeStack",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:DescribeStacks"
+        // Check the status of stack--error or
+        // completed, then install helm charts
+      ],
+      "Resource": "arn:aws:cloudformation:*:*:stack/env-*-dwx-stack/*"
+    },
+    {
+      "Sid": "gocodeEKSCluster",
+      "Effect": "Allow",
+      "Action": [
+        "eks:UpdateClusterConfig",
+        // Update EKScluster config Enable
+        // Private EKS and Cloudwatch on EKS
+        "eks:UpdateClusterVersion",
+        // Updates an Amazon EKS cluster to
+        // the specified Kubernetes version.
+        "eks:DescribeUpdate"
+        // Check status of Updates--enable
+        // Private EKS and Cloudwatch on EKS
+      ],
+      "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks"
+    },
+    {
+      "Sid": "S3full",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetBucketLocation"
+        // Needed for external bucket feature
+        // via UI, where we validate the VPC
+        // and bucket region are the same
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "S3PutGetObject",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        // Put cf template in SDX bucket
+        "s3:GetObject"
+        // Get cf template while cf stack creation may
+        // not be needed for reduced mode
+      ],
+      "Resource": [
+        "arn:aws:s3:::${DATALAKE_BUCKET}/cf-templates/*",
+        "arn:aws:s3:::${DATALAKE_BUCKET}/backup/*"
+      ]
+    },
+    {
+      "Sid": "UpgradeCfStack",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:GetTemplate",
+        // EKS upgrade gets Cloudformation
+        // template body and makew changes
+        "cloudformation:GetTemplateSummary",
+        // EKS upgrade loads CF template
+        // parameters to call method, then
+        // needs the permission
+        "eks:ListUpdates",
+        // Identifies resources related to eks change
+        "ec2:CreateLaunchTemplateVersion",
+        // launchTemplate cannot be changed,
+        // only new versions can be added
+        "autoscaling:TerminateInstanceInAutoScalingGroup",
+        // Upgrade terminates instances in old
+        // autoscalinggroup
+        "autoscaling:DescribeScheduledActions",
+        // Updatestack in control of instances
+        // of cluster autoscalinggroup, has permission
+        // to get status of group
+        "autoscaling:SetDesiredCapacity",
+        // DesiredCapacity can be changed with upgrade;
+        // will be set each time nodegroup is changed;
+        // nodegroup changes when related launchtemplate
+        // changes with new version of eks ami for
+        // upgrade, requiring permission
+        "ec2:DescribeInstances"
+        // Upgrade needs old/new instance status
+      ],
+      "Resource": "*"
+    }
+  ]
+}

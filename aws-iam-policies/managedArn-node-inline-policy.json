@@ -1,0 +1,284 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "clusterautoscaler",
+      "Effect": "Allow",
+      "Action": [
+        "autoscaling:DescribeAutoScalingGroups", //comment 1
+        "autoscaling:DescribeAutoScalingInstances", //comment 2
+        "autoscaling:DescribeTags",
+        "autoscaling:DescribeLaunchConfigurations",
+        "autoscaling:SetDesiredCapacity",
+        "autoscaling:TerminateInstanceInAutoScalingGroup",
+        "ec2:DescribeLaunchTemplateVersions",
+        "ec2:CreateTags"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Action": [
+        "elasticfilesystem:DescribeAccessPoints",
+        "elasticfilesystem:DescribeFileSystems",
+        "elasticfilesystem:DescribeMountTargets",
+        "ec2:DescribeAvailabilityZones"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Condition": {
+        "StringLike": {
+          "aws:RequestTag/efs.csi.aws.com/cluster": "true"
+        }
+      },
+      "Action": [
+        "elasticfilesystem:CreateAccessPoint"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "elasticfilesystem:TagResource"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringLike": {
+          "aws:ResourceTag/efs.csi.aws.com/cluster": "true"
+        }
+      }
+    },
+    {
+      "Condition": {
+        "StringEquals": {
+          "aws:ResourceTag/efs.csi.aws.com/cluster": "true"
+        }
+      },
+      "Action": "elasticfilesystem:DeleteAccessPoint",
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "ec2:CreateSnapshot",
+        "ec2:AttachVolume",
+        "ec2:DetachVolume",
+        "ec2:ModifyVolume",
+        "ec2:DescribeAvailabilityZones",
+        "ec2:DescribeInstances",
+        "ec2:DescribeSnapshots",
+        "ec2:DescribeTags",
+        "ec2:DescribeVolumes",
+        "ec2:DescribeVolumesModifications"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Condition": {
+        "StringEquals": {
+          "ec2:CreateAction": [
+            "CreateVolume",
+            "CreateSnapshot"
+          ]
+        }
+      },
+      "Action": [
+        "ec2:CreateTags"
+      ],
+      "Resource": [
+        "arn:aws:ec2:*:*:volume/*",
+        "arn:aws:ec2:*:*:snapshot/*"
+      ],
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "ec2:DeleteTags"
+      ],
+      "Resource": [
+        "arn:aws:ec2:*:*:volume/*",
+        "arn:aws:ec2:*:*:snapshot/*"
+      ],
+      "Effect": "Allow"
+    },
+    {
+      "Condition": {
+        "StringLike": {
+          "aws:RequestTag/ebs.csi.aws.com/cluster": "true"
+        }
+      },
+      "Action": [
+        "ec2:CreateVolume"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Condition": {
+        "StringLike": {
+          "aws:RequestTag/CSIVolumeName": "*"
+        }
+      },
+      "Action": [
+        "ec2:CreateVolume"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Condition": {
+        "StringLike": {
+          "aws:RequestTag/kubernetes.io/cluster/*": "owned"
+        }
+      },
+      "Action": [
+        "ec2:CreateVolume"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Condition": {
+        "StringLike": {
+          "ec2:ResourceTag/ebs.csi.aws.com/cluster": "true"
+        }
+      },
+      "Action": [
+        "ec2:DeleteVolume"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Condition": {
+        "StringLike": {
+          "ec2:ResourceTag/CSIVolumeName": "*"
+        }
+      },
+      "Action": [
+        "ec2:DeleteVolume"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Condition": {
+        "StringLike": {
+          "ec2:ResourceTag/kubernetes.io/cluster/*": "owned"
+        }
+      },
+      "Action": [
+        "ec2:DeleteVolume"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Condition": {
+        "StringLike": {
+          "ec2:ResourceTag/CSIVolumeSnapshotName": "*"
+        }
+      },
+      "Action": [
+        "ec2:DeleteSnapshot"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Condition": {
+        "StringLike": {
+          "ec2:ResourceTag/ebs.csi.aws.com/cluster": "true"
+        }
+      },
+      "Action": [
+        "ec2:DeleteSnapshot"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKeyWithoutPlaintext",
+        "kms:CreateGrant"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Sid": "kms",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:GenerateDatakey",
+        "kms:ListAliases",
+        "kms:DescribeKey"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Sid": "limitsmonitoring",
+      "Effect": "Allow",
+      "Action": [
+        "servicequotas:ListServiceQuotas",
+        "elasticloadbalancing:DescribeAccountLimits",
+        "elasticloadbalancing:DescribeLoadBalancers",
+        "rds:DescribeAccountAttributes",
+        "rds:DescribeDBInstances",
+        "rds:DescribeDBSnapshots"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Sid": "listmybuckets",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${DATALAKE_BUCKET}",
+        "arn:aws:s3:::${LOGS_BUCKET}",
+        "arn:aws:s3:::${BACKUP_BUCKET} "
+      ],
+      "Effect": "Allow"
+    },
+    {
+      "Sid": "putgetmybucketpaths",
+      "Action": [
+        "s3:Get*",
+        "s3:Delete*",
+        "s3:Put*",
+        "s3:ListBucketMultipartUploads",
+        "s3:AbortMultipartUpload"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${LOGS_BUCKET}/clusters",
+        "arn:aws:s3:::${LOGS_BUCKET}/clusters/*",
+        "arn:aws:s3:::${DATALAKE_BUCKET}/clusters",
+        "arn:aws:s3:::${DATALAKE_BUCKET}/clusters/*",
+        "arn:aws:s3:::${LOGS_LOCATION_BASE}",
+        "arn:aws:s3:::${LOGS_LOCATION_BASE}/*",
+        "arn:aws:s3:::${BACKUP_LOCATION_BASE}",
+        "arn:aws:s3:::${BACKUP_LOCATION_BASE}/*",
+        "arn:aws:s3:::${STORAGE_LOCATION_BASE}",
+        "arn:aws:s3:::${STORAGE_LOCATION_BASE}/*",
+        "arn:aws:s3:::${DATALAKE_BUCKET}/backup",
+        "arn:aws:s3:::${DATALAKE_BUCKET}/backup/*",
+        "arn:aws:s3:::${DATALAKE_BUCKET}/tmp",
+        "arn:aws:s3:::${DATALAKE_BUCKET}/tmp/*"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}

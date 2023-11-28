@@ -1,0 +1,147 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "iam:SimulatePrincipalPolicy",
+            "Resource": "arn:aws:iam::${ACCOUNT_ID}:role/*"
+        },
+        {
+            "Sid": "ResourceTag",
+            "Effect": "Allow",
+            "Action": [
+                "autoscaling:SuspendProcesses",
+                "autoscaling:UpdateAutoScalingGroup",
+                "cloudformation:DescribeStackEvents",
+                "cloudformation:DescribeStacks",
+                "cloudformation:UpdateStack",
+                "ec2:DeleteKeyPair"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {
+                    "aws:ResourceTag/Cloudera-Resource-Name": "crn:cdp:*"
+                }
+            }
+        },
+        {
+            "Sid": "RequestTag",
+            "Effect": "Allow",
+            "Action": [
+                "eks:TagResource"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {
+                    "aws:RequestTag/Cloudera-Resource-Name": "crn:cdp:*"
+                }
+            }
+        },
+        {
+            "Sid": "CFRequestTag",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {
+                    "aws:RequestTag/Cloudera-Resource-Name": "crn:cdp:*"
+                },
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                }
+            }
+        },
+        {
+            "Sid": "CFEks",
+            "Effect": "Allow",
+            "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks",
+            "Action": [
+                "eks:DescribeCluster"
+            ],
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                }
+            }
+        },
+        {
+            "Sid": "CFCloudwatch",
+            "Effect": "Allow",
+            "Resource": "arn:aws:eks:*::log-group:/aws/eks/env-*-dwx-stack-eks/cluster:*",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:DescribeLogStreams",
+                "logs:PutLogEvents",
+                "logs:PutRetentionPolicy"
+            ],
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                }
+            }
+        },
+        {
+            "Sid": "gocodeEks",
+            "Effect": "Allow",
+            "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks",
+            "Action": [
+                "eks:DescribeUpdate",
+                "eks:UpdateClusterConfig",
+                "eks:UpdateClusterVersion"
+            ]
+        },
+        {
+            "Sid": "Role",
+            "Effect": "Allow",
+            "Action": [
+                "iam:DeleteRolePolicy",
+                "iam:GetRolePolicy",
+                "iam:PutRolePolicy"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:instance-profile/env-*-dwx-stack-NodeInstanceProfile-*",
+                "arn:aws:iam::*:role/env-*-dwx-stack-EKSServiceRole-*",
+                "arn:aws:iam::*:role/env-*-dwx-stack-NodeInstanceRole-*"
+            ]
+        },
+        {
+            "Sid": "S3PutGetObject",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${DATALAKE_BUCKET}/cf-templates/*",
+                "arn:aws:s3:::${DATALAKE_BUCKET}/backup/*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "acm:DescribeCertificate",
+                "acm:ListCertificates",
+                "autoscaling:DescribeAutoScalingGroups",
+                "ec2:CreateKeyPair",
+                "ec2:CreateTags",
+                "ec2:DeleteTags",
+                "ec2:DescribeDhcpOptions",
+                "ec2:DescribeKeyPairs",
+                "ec2:DescribeRouteTables",
+                "ec2:DescribeSubNets",
+                "ec2:DescribeVpcAttribute",
+                "ec2:DescribeVpcs",
+                "iam:ListAttachedRolePolicies",
+                "iam:SimulatePrincipalPolicy",
+                "s3:GetBucketLocation",
+                "s3:ListBucket",
+                "s3:PutObjectAcl"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

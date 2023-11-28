@@ -1,0 +1,164 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ResourceTag",
+            "Effect": "Allow",
+            "Action": [
+                "acm:DeleteCertificate",
+                "autoscaling:SuspendProcesses",
+                "autoscaling:UpdateAutoScalingGroup",
+                "cloudformation:DeleteStack",
+                "cloudformation:DescribeStackEvents",
+                "elasticfilesystem:PutFileSystemPolicy",
+                "rds:DeleteDBInstance",
+                "rds:DeleteDBSecurityGroup",
+                "rds:DeleteDBSubnetGroup",
+                "ec2:DeleteKeypair"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {
+                    "aws:ResourceTag/Cloudera-Resource-Name": "crn:cdp:*"
+                }
+            }
+        },
+        {
+            "Sid": "RequestTag",
+            "Effect": "Allow",
+            "Action": [
+                "autoscaling:CreateAutoScalingGroup",
+                "cloudformation:CreateStack",
+                "eks:TagResource",
+                "elasticfilesystem:CreateFileSystem",
+                "kms:CreateGrant",
+                "kms:CreateKey",
+                "rds:AddTagsToResource",
+                "cloudformation:UpdateStack"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {
+                    "aws:RequestTag/Cloudera-Resource-Name": "crn:cdp:*"
+                }
+            }
+        },
+        {
+            "Sid": "AttachRole",
+            "Effect": "Allow",
+            "Action": "iam:AttachRolePolicy",
+            "Resource": [
+                "arn:aws:iam::*:role/env-*-dwx-stack-EKSServiceRole-*",
+                "arn:aws:iam::*:role/env-*-dwx-stack-NodeInstanceRole-*"
+            ],
+            "Condition": {
+                "ForAnyValue:ArnEqualsIfExists": {
+                    "iam:PolicyARN": [
+                        "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+                        "arn:aws:iam::aws:policy/AmazonEKSServicePolicy",
+                        "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+                        "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+                        "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+                        "arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "Role",
+            "Effect": "Allow",
+            "Action": [
+                "iam:AddRoleToInstanceProfile",
+                "iam:CreateInstanceProfile",
+                "iam:CreateRole",
+                "iam:DeleteInstanceProfile",
+                "iam:DeleteRole",
+                "iam:DeleteRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:GetRole",
+                "iam:GetRolePolicy",
+                "iam:PassRole",
+                "iam:PutRolePolicy",
+                "iam:RemoveRoleFromInstanceProfile"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:instance-profile/env-*-dwx-stack-NodeInstanceProfile-*",
+                "arn:aws:iam::*:role/env-*-dwx-stack-EKSServiceRole-*",
+                "arn:aws:iam::*:role/env-*-dwx-stack-NodeInstanceRole-*"
+            ]
+        },
+        {
+            "Sid": "gocode",
+            "Effect": "Allow",
+            "Action": [
+                "acm:DescribeCertificate",
+                "acm:ListCertificates",
+                "ec2:DescribeKeyPairs",
+                "ec2:DescribeDhcpOptions",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeVpcs",
+                "autoscaling:DescribeAutoScalingGroups",
+                "iam:SimulatePrincipalPolicy",
+                "iam:ListAttachedRolePolicies",
+                "ec2:DescribeVpcAttribute",
+                "ec2:DescribeImages",
+                "ec2:CreateTags",
+                "ec2:CreateKeyPair"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "gocodeStack",
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:DescribeStacks"
+            ],
+            "Resource": "arn:aws:cloudformation:*:*:stack/env-*-dwx-stack/*"
+        },
+        {
+            "Sid": "gocodeEKSCluster",
+            "Effect": "Allow",
+            "Action": [
+                "eks:UpdateClusterConfig",
+                "eks:UpdateClusterVersion",
+                "eks:DescribeUpdate"
+            ],
+            "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks"
+        },
+        {
+            "Sid": "S3full",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "S3PutGetObject",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${DATALAKE_BUCKET}/cf-templates/*",
+                "arn:aws:s3:::${DATALAKE_BUCKET}/backup/*"
+            ]
+        },
+        {
+            "Sid": "UpgradeCfStack",
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:GetTemplate",
+                "cloudformation:GetTemplateSummary",
+                "eks:ListUpdates",
+                "ec2:CreateLaunchTemplateVersion",
+                "autoscaling:TerminateInstanceInAutoScalingGroup",
+                "autoscaling:DescribeScheduledActions",
+                "autoscaling:SetDesiredCapacity",
+                "ec2:DescribeInstances"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
