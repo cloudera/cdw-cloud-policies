@@ -19,6 +19,7 @@ jobs:
       - run: python3 main.py ${{ steps.modifieddocfiles.outputs.added_modified }}
       - name: commit files
         run: |
+          git status
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
