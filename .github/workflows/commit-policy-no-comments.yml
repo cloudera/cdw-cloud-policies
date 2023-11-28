@@ -7,8 +7,8 @@ on:
       - 'aws-iam-policies/doc/*-doc-*.json5'
 jobs:
   testJob:
-    name: Test
-    runs-on: self-hosted
+    name: Remove Comments
+    runs-on: ci_builds
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v4
