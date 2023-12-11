@@ -5,8 +5,8 @@
       "Sid": "clusterautoscaler",
       "Effect": "Allow",
       "Action": [
-        "autoscaling:DescribeAutoScalingGroups", //comment 1
-        "autoscaling:DescribeAutoScalingInstances", //comment 2
+        "autoscaling:DescribeAutoScalingGroups",
+        "autoscaling:DescribeAutoScalingInstances",
         "autoscaling:DescribeTags",
         "autoscaling:DescribeLaunchConfigurations",
         "autoscaling:SetDesiredCapacity",

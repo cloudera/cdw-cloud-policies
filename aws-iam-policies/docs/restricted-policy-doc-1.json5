@@ -3,7 +3,7 @@
   "Statement": [
     {
       "Sid": "ResourceTag",
-      // Control access to AWS serviceresources based on
+      // Control access to AWS service resources based on
       // resource tags using ResourceTag/key-name
       // condition key to allow access to resource or not
       // based on resource tagging
