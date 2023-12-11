@@ -180,12 +180,7 @@
         // Upload log events to log stream
         "logs:PutRetentionPolicy"
         // Change number of days Cloudwatch retains
-      ],
-      "Condition": {
-        "ForAnyValue:StringEquals": {
-          "aws:CalledVia": "cloudformation.amazonaws.com"
-        }
-      }
+      ]
     },
     {
       "Sid": "CFKeys",
