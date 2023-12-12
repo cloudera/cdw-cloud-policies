@@ -1,1 +1,57 @@
 # cdw-cloud-policies
+
+# AWS IAM Policies
+
+### Restricted policy:
+
+Since AWS has a character limit on the policies, the cross-account policy is split into 2.
+
+- [Restricted Policy cross account file 1](./aws-iam-policies/generated/restricted-policy-1.json5).
+- [Restricted Policy cross account file 2](./aws-iam-policies/generated/restricted-policy-2.json5).
+
+To understand why CDW needs each permission see,
+
+- [Restricted Policy file 1 with comments](./aws-iam-policies/docs/restricted-policy-doc-1.json5).
+- [Restricted Policy file 2 with comments](./aws-iam-policies/docs/restricted-policy-doc-2.json5).
+
+
+### Reduced permissions mode Policy:
+
+- [Reduced mode cross account Policy](./aws-iam-policies/reduced-permissions-mode.json)
+
+
+### Restricted Policy with Managed Policy ARN:
+
+- [Restricted Policy cross account with Managed Policy ARN file 1](./aws-iam-policies/generated/restricted-policy-managedARN-1.json5).
+- [Restricted Policy cross account with Managed Policy ARN file 2](./aws-iam-policies/generated/restricted-policy-managedARN-2.json5).
+
+### Inline Node Role Policy:
+
+- [Managed Policy Inline Node Role Policy](./aws-iam-policies/managedArn-node-inline-policy.json)
+
+
+### Releases:
+
+Current release docs can be found at, https://github.com/cloudera/cdw-cloud-policies/blob/latest-release
+Older release docs can be found by their branch name
+Ongoing release commits will be made on **main** branch
+
+### Development:
+
+Policies under generated folder are generated & committed via the github workflow. There should be no manual changes to them.
+Any changes to restricted policy,should be done in [docs](./aws-iam-policies/docs) folder
+the restricted policy w/o comments and restricted policy for managed policy ARN will be auto generated.
+
+#### Create a new release and tagging:
+
+Since the docs need to use static links for referencing the policies, we need to always maintain the tag "latest-release" pointing to the current 
+release. Steps to take care for once a new release branch is cut
+
+```bash
+$ git checkout -b R39 origin/master // Cut a new branch say R39
+$ git tag -d latest-release // Remove the old tag
+$ git push origin :refs/tags/latest-release // push the deleted tag to remote
+$ git tag latest-release // tag new release with latest-release
+$ git push --tags // push the tag to remote
+$ git push origin HEAD // push the branch to remote
+```
