@@ -1,0 +1,177 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "cloudformation",
+            "Effect": "Allow",
+            "Action": [
+                "acm:AddTagsToCertificate",
+                "acm:DescribeCertificate",
+                "acm:RequestCertificate",
+                "autoscaling:DescribeScalingActivities",
+                "ec2:CreateLaunchTemplate",
+                "ec2:CreatePlacementGroup",
+                "ec2:CreateSecurityGroup",
+                "ec2:DescribeAccountAttributes",
+                "ec2:DescribeAvailabilityZones",
+                "ec2:DescribeLaunchTemplates",
+                "ec2:DescribeLaunchTemplateVersions",
+                "ec2:DescribePlacementGroups",
+                "ec2:DescribeSecurityGroups",
+                "ec2:RevokeSecurityGroupEgress",
+                "ec2:RevokeSecurityGroupIngress",
+                "ec2:RunInstances",
+                "ec2:DeleteLaunchTemplate",
+                "ec2:DeletePlacementGroup",
+                "elasticfilesystem:DescribeMountTargets",
+                "elasticfilesystem:DescribeFileSystems"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                }
+            }
+        },
+        {
+            "Sid": "CFResourceTag",
+            "Resource": "*",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:AuthorizeSecurityGroupEgress",
+                "ec2:AuthorizeSecurityGroupIngress",
+                "ec2:RevokeSecurityGroupEgress",
+                "ec2:RevokeSecurityGroupIngress",
+                "autoscaling:DeleteAutoScalingGroup",
+                "ec2:DeleteSecurityGroup",
+                "eks:DeleteCluster"
+            ],
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                },
+                "StringLike": {
+                    "aws:ResourceTag/Cloudera-Resource-Name": "crn:cdp:*"
+                }
+            }
+        },
+        {
+            "Sid": "CFRequestTag",
+            "Resource": "*",
+            "Effect": "Allow",
+            "Action": [
+                "kms:TagResource",
+                "logs:CreateLogGroup"
+            ],
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                },
+                "StringLike": {
+                    "aws:RequestTag/Cloudera-Resource-Name": "crn:cdp:*"
+                }
+            }
+        },
+        {
+            "Sid": "CFDatabase",
+            "Resource": [
+                "arn:aws:rds:*:*:db:env-*-dwx-stack-rds",
+                "arn:aws:rds:*:*:subgrp:env-*-dwx-stack-dbsubnetgroup-*"
+            ],
+            "Effect": "Allow",
+            "Action": [
+                "rds:CreateDBInstance",
+                "rds:DescribeDBInstances",
+                "rds:CreateDBSubnetGroup",
+                "rds:DescribeDBSubnetGroups",
+                "rds:ListTagsForResource"
+            ],
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                }
+            }
+        },
+        {
+            "Sid": "CFEksCluster",
+            "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks",
+            "Effect": "Allow",
+            "Action": [
+                "eks:CreateCluster",
+                "eks:DescribeCluster"
+            ],
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                }
+            }
+        },
+        {
+            "Sid": "CFCloudwatch",
+            "Resource": "arn:aws:eks:*::log-group:/aws/eks/env-*-dwx-stack-eks/cluster:*",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:DescribeLogStreams",
+                "logs:PutLogEvents",
+                "logs:PutRetentionPolicy"
+            ]
+        },
+        {
+            "Sid": "CFKeys",
+            "Resource": "*",
+            "Effect": "Allow",
+            "Action": [
+                "kms:CreateAlias",
+                "kms:DeleteAlias",
+                "kms:DescribeKey",
+                "kms:EnableKeyRotation",
+                "kms:GenerateDataKey",
+                "kms:GenerateDataKeyWithoutPlaintext",
+                "kms:ScheduleKeyDeletion"
+            ],
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                }
+            }
+        },
+        {
+            "Sid": "CFFileSystem",
+            "Resource": "*",
+            "Effect": "Allow",
+            "Action": [
+                "elasticfilesystem:CreateMountTarget",
+                "elasticfilesystem:DeleteFileSystem",
+                "elasticfilesystem:DeleteMountTarget"
+            ],
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                },
+                "StringLike": {
+                    "aws:ResourceTag/clusterId": "env-*"
+                }
+            }
+        },
+        {
+            "Sid": "AllowSsmParams",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:DescribeParameters",
+                "ssm:GetParameter",
+                "ssm:GetParameters",
+                "ssm:GetParameterHistory",
+                "ssm:GetParametersByPath"
+            ],
+            "Resource": [
+                "arn:aws:ssm:*:*:parameter/aws/service/eks/optimized-ami/*"
+            ],
+            "Condition": {
+                "ForAnyValue:StringEquals": {
+                    "aws:CalledVia": "cloudformation.amazonaws.com"
+                }
+            }
+        }
+    ]
+}

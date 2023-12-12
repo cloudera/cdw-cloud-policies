@@ -78,7 +78,6 @@
                 "iam:GetRole",
                 "iam:GetRolePolicy",
                 "iam:PassRole",
-                "iam:PutRolePolicy",
                 "iam:RemoveRoleFromInstanceProfile"
             ],
             "Resource": [
