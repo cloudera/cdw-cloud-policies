@@ -72,6 +72,8 @@ Since the docs need to use static links for referencing the policies, we need to
 release. Steps to take care for once a new release branch is cut. Once the release is out, update the tags
 
 ```bash
+
+$ git checkout R39 origin/main // Switch to the current release branch say R39
 $ git tag -d latest-release // Remove the old tag
 $ git push origin :refs/tags/latest-release // push the deleted tag to remote
 $ git tag latest-release // tag new release with latest-release
