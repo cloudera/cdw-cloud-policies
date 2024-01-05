@@ -42,6 +42,21 @@ Policies under generated folder are generated & committed via the github workflo
 Any changes to restricted policy,should be done in [docs](./aws-iam-policies/docs) folder
 the restricted policy w/o comments and restricted policy for managed policy ARN will be auto generated.
 
+#### Guidelines:
+
+Understand how conditions work, https://docs.aws.amazon.com/service-authorization/latest/reference/reference_policies_actions-resources-contextkeys.html. 
+
+- If the action is a **create** resource with Request Tag passed, and
+  - If the resource is created via running CloudFormation template, add the action in  Sid **CFRequestTag**
+  - Else Add the action in Sid - **RequestTag**
+- If the action is on an already existing resource which has a Resource Tag, and
+  - If the action is called in the CloudFormation template, Then add the action in Sid - **CFResourceTag**
+  - Else Add the action in Sid - **ResourceTag**
+- If the action is called from our DWX Server go code via AWS SDK API
+  - Add it in Sid gocode* as applicable
+
+
+
 #### Create a new release and tagging:
 
 Since the docs need to use static links for referencing the policies, we need to always maintain the tag "latest-release" pointing to the current 
