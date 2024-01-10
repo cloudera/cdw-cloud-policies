@@ -59,11 +59,19 @@ Understand how conditions work, https://docs.aws.amazon.com/service-authorizatio
 
 #### Create a new release and tagging:
 
-Since the docs need to use static links for referencing the policies, we need to always maintain the tag "latest-release" pointing to the current 
-release. Steps to take care for once a new release branch is cut
+##### Create a new release when CDW branch is cut for QE to test
 
 ```bash
 $ git checkout -b R39 origin/main // Cut a new branch say R39
+$ git push origin HEAD // push the branch to remote
+```
+
+##### Once in Prod update the tags
+
+Since the docs need to use static links for referencing the policies, we need to always maintain the tag "latest-release" pointing to the current 
+release. Steps to take care for once a new release branch is cut. Once the release is out, update the tags
+
+```bash
 $ git tag -d latest-release // Remove the old tag
 $ git push origin :refs/tags/latest-release // push the deleted tag to remote
 $ git tag latest-release // tag new release with latest-release
