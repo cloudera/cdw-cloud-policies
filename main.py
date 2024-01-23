@@ -18,5 +18,9 @@ for file in files:
             actionsList = sid['Action']
             if 'iam:PutRolePolicy' in actionsList:
                 actionsList.remove('iam:PutRolePolicy')
-                break
+
+            if 'iam:AttachRolePolicy' in actionsList:
+                conditionPolicyArnList = sid["Condition"]["ForAnyValue:ArnEqualsIfExists"]["iam:PolicyARN"]
+                conditionPolicyArnList.append("arn:aws:iam::${AWS_ACCOUNT}:policy/${NODEROLE_INLINE_POLICY}")
+
         json.dump(jsonData, managedArn, indent=4)
