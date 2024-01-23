@@ -32,15 +32,15 @@ To understand why CDW needs each permission see,
 
 ### Releases:
 
-Current release docs can be found at, https://github.com/cloudera/cdw-cloud-policies/blob/latest-release
-Older release docs can be found by their branch name
-Ongoing release commits will be made on **main** branch
+- Current release docs can be found at, https://github.com/cloudera/cdw-cloud-policies/blob/latest-release
+- Older release docs can be found by their branch name
+- Ongoing release commits will be made on **main** branch
 
 ### Development:
 
-Policies under generated folder are generated & committed via the github workflow. There should be no manual changes to them.
-Any changes to restricted policy,should be done in [docs](./aws-iam-policies/docs) folder
-the restricted policy w/o comments and restricted policy for managed policy ARN will be auto generated.
+- Policies under generated folder are generated & committed via the github workflow. There should be no manual changes to them.
+- Any changes to restricted policy,should be done in [docs](./aws-iam-policies/docs) folder
+- The restricted policy w/o comments and restricted policy for managed policy ARN will be auto generated.
 
 #### Guidelines:
 
