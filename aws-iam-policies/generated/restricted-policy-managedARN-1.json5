@@ -59,7 +59,8 @@
                         "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
                         "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
                         "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
-                        "arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy"
+                        "arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy",
+                        "arn:aws:iam::${AWS_ACCOUNT}:policy/${NODEROLE_INLINE_POLICY}"
                     ]
                 }
             }
