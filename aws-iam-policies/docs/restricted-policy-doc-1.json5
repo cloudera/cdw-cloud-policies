@@ -62,7 +62,7 @@
         "autoscaling:CreateAutoScalingGroup",
         //Create autoscaling groups for cluster
         "cloudformation:CreateStack",
-        // Activate createstack mainly with
+        // Activate createstack with
         // cloudformation
         "eks:TagResource",
         // Tag eks cluster, e.g.: clusterId,
