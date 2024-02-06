@@ -14,7 +14,6 @@
                 "autoscaling:SuspendProcesses",
                 "autoscaling:UpdateAutoScalingGroup",
                 "cloudformation:DescribeStackEvents",
-                "cloudformation:DescribeStacks",
                 "cloudformation:UpdateStack",
                 "ec2:DeleteKeyPair"
             ],
@@ -82,6 +81,12 @@
                     "aws:CalledVia": "cloudformation.amazonaws.com"
                 }
             }
+        },
+        {
+            "Sid": "gocodeCF",
+            "Effect": "Allow",
+            "Action": "cloudformation:DescribeStacks",
+            "Resource": "arn:aws:cloudformation:*:*:stack/env-*-dwx-stack/*"
         },
         {
             "Sid": "gocodeEks",
