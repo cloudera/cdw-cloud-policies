@@ -9,6 +9,7 @@
         "autoscaling:DescribeAutoScalingInstances",
         "autoscaling:DescribeTags",
         "autoscaling:DescribeLaunchConfigurations",
+        "autoscaling:DescribeScalingActivities",
         "autoscaling:SetDesiredCapacity",
         "autoscaling:TerminateInstanceInAutoScalingGroup",
         "ec2:DescribeLaunchTemplateVersions",
