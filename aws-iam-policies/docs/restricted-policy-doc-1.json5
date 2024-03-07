@@ -198,10 +198,13 @@
         "ec2:CreateTags",
         // Tag subnets and eks security group
         // See footnote 2
-        "ec2:CreateKeyPair"
+        "ec2:CreateKeyPair",
         // Create ssh Public key pair, pass to ec2
         // instances. Not required if passed/set/
         // reused via CB
+        "ec2:DescribeInstanceTypes"
+        // validate whether instance type is supported in a
+        // region or not
       ],
       "Resource": "*"
     },
