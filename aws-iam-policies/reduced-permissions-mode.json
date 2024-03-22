@@ -140,6 +140,7 @@
                 "ec2:DescribeSubNets",
                 "ec2:DescribeVpcAttribute",
                 "ec2:DescribeVpcs",
+                "ec2:DescribeInstanceTypes",
                 "iam:ListAttachedRolePolicies",
                 "iam:SimulatePrincipalPolicy",
                 "s3:GetBucketLocation",
