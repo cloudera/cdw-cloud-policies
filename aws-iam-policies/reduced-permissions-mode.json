@@ -13,9 +13,13 @@
             "Action": [
                 "autoscaling:SuspendProcesses",
                 "autoscaling:UpdateAutoScalingGroup",
+                "autoscaling:DescribeAutoScalingGroups",
                 "cloudformation:DescribeStackEvents",
                 "cloudformation:UpdateStack",
-                "ec2:DeleteKeyPair"
+                "ec2:DeleteKeyPair",
+                "rds:StartDBInstance",
+                "rds:StopDBInstance",
+                "rds:DescribeDBInstances"
             ],
             "Resource": "*",
             "Condition": {
