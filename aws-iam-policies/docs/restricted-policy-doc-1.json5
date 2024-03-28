@@ -293,6 +293,23 @@
         // Upgrade needs old/new instance status
       ],
       "Resource": "*"
-    }
+    },
+    {
+            "Sid": "StartStopRDS",
+            "Effect": "Allow",
+            "Action": [
+                "rds:StartDBInstance",
+                // Stop RDS Instance while stopping the cluster
+                "rds:StopDBInstance",
+                // Start RDS Instance while starting the cluster
+                "rds:DescribeDBInstances"
+                // Describe RDBS (postgres) instance created by
+                // cf, used to detect quota of DB instance
+            ],
+            "Resource": [
+                "arn:aws:rds:*:*:db:env-*-dwx-stack-rds",
+                "arn:aws:rds:*:*:subgrp:env-*-dwx-stack-dbsubnetgroup-*"
+            ]
+        }
   ]
 }
