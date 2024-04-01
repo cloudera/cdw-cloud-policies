@@ -130,9 +130,6 @@
         "rds:CreateDBInstance",
         // The RDBS (postgres) created to store dwx
         // cluster info during activation
-        "rds:DescribeDBInstances",
-        // Describe RDBS (postgres) instance created by
-        // cf, used to detect quota of DB instance
         "rds:CreateDBSubnetGroup",
         // The DBSubnetGroup created during activation
         "rds:DescribeDBSubnetGroups",
