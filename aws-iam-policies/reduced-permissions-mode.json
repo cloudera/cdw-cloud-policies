@@ -15,10 +15,7 @@
                 "autoscaling:UpdateAutoScalingGroup",
                 "cloudformation:DescribeStackEvents",
                 "cloudformation:UpdateStack",
-                "ec2:DeleteKeyPair",
-                "rds:StartDBInstance",
-                "rds:StopDBInstance",
-                "rds:DescribeDBInstances"
+                "ec2:DeleteKeyPair"
             ],
             "Resource": "*",
             "Condition": {
@@ -151,6 +148,19 @@
                 "s3:PutObjectAcl"
             ],
             "Resource": "*"
+        },
+        {
+            "Sid": "StartStopRDS",
+            "Effect": "Allow",
+            "Action": [
+                "rds:StartDBInstance",
+                "rds:StopDBInstance",
+                "rds:DescribeDBInstances"
+            ],
+            "Resource": [
+                "arn:aws:rds:*:*:db:env-*-dwx-stack-rds",
+                "arn:aws:rds:*:*:subgrp:env-*-dwx-stack-dbsubnetgroup-*"
+            ]
         }
     ]
 }
