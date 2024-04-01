@@ -81,7 +81,6 @@
             "Effect": "Allow",
             "Action": [
                 "rds:CreateDBInstance",
-                "rds:DescribeDBInstances",
                 "rds:CreateDBSubnetGroup",
                 "rds:DescribeDBSubnetGroups",
                 "rds:ListTagsForResource"
