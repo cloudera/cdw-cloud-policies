@@ -251,6 +251,20 @@
           "aws:CalledVia": "cloudformation.amazonaws.com"
         }
       }
+    },
+    {
+      "Sid": "TagRoleRestriction",
+      "Effect": "Allow",
+      "Action": [
+        // used by Cloudformation to tag EKSServiceRole and NodeInstanceRole
+        "iam:TagRole"
+      ],
+      "Resource": "*",
+      "Condition": {
+          "ForAnyValue:StringEquals": {
+            "aws:CalledVia": "cloudformation.amazonaws.com"
+          }
+      }
     }
   ]
 }
