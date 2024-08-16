@@ -55,8 +55,10 @@
         // Delete Placement Groups created by cf
         "elasticfilesystem:DescribeMountTargets",
         // Called by CF while creating EFS
-        "elasticfilesystem:DescribeFileSystems"
+        "elasticfilesystem:DescribeFileSystems",
         // Called by CF while creating EFS
+        "rds:DescribeEngineDefaultParameters"
+        // Describes default parameters of RDS. Required for Cloudformation operations
       ],
       "Resource": "*",
       "Condition": {
@@ -123,7 +125,8 @@
       "Sid": "CFDatabase",
       "Resource": [
         "arn:aws:rds:*:*:db:env-*-dwx-stack-rds",
-        "arn:aws:rds:*:*:subgrp:env-*-dwx-stack-dbsubnetgroup-*"
+        "arn:aws:rds:*:*:subgrp:env-*-dwx-stack-dbsubnetgroup-*",
+        "arn:aws:rds:*:*:pg:env-*-dwx-stack-rds-parameter-group"
       ],
       "Effect": "Allow",
       "Action": [
@@ -134,8 +137,14 @@
         // The DBSubnetGroup created during activation
         "rds:DescribeDBSubnetGroups",
         // Describe DBSubnetGroup instance created by cf
-        "rds:ListTagsForResource"
+        "rds:ListTagsForResource",
         // Lists tags on RDS DBsubnetgroup. Required for Cloudformation operations
+        "rds:CreateDBParameterGroup",
+        // Required by Cloudformation to create RDS Parameter Group
+        "rds:DeleteDBParameterGroup",
+        // Required by Cloudformation to delete RDS Parameter Group
+        "rds:ModifyDBParameterGroup"
+        // Required by Cloudformation to modify RDS Parameter Group
 
       ],
       "Condition": {

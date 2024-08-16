@@ -198,6 +198,8 @@
         "ec2:CreateTags",
         // Tag subnets and eks security group
         // See footnote 2
+        "ec2:DeleteTags",
+        // Delete tags from shared subnet, delete any other tags
         "ec2:CreateKeyPair",
         // Create ssh Public key pair, pass to ec2
         // instances. Not required if passed/set/
