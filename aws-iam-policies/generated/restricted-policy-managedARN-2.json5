@@ -24,7 +24,8 @@
                 "ec2:DeleteLaunchTemplate",
                 "ec2:DeletePlacementGroup",
                 "elasticfilesystem:DescribeMountTargets",
-                "elasticfilesystem:DescribeFileSystems"
+                "elasticfilesystem:DescribeFileSystems",
+                "rds:DescribeEngineDefaultParameters"
             ],
             "Resource": "*",
             "Condition": {
@@ -76,14 +77,18 @@
             "Sid": "CFDatabase",
             "Resource": [
                 "arn:aws:rds:*:*:db:env-*-dwx-stack-rds",
-                "arn:aws:rds:*:*:subgrp:env-*-dwx-stack-dbsubnetgroup-*"
+                "arn:aws:rds:*:*:subgrp:env-*-dwx-stack-dbsubnetgroup-*",
+                "arn:aws:rds:*:*:pg:env-*-dwx-stack-rds-parameter-group"
             ],
             "Effect": "Allow",
             "Action": [
                 "rds:CreateDBInstance",
                 "rds:CreateDBSubnetGroup",
                 "rds:DescribeDBSubnetGroups",
-                "rds:ListTagsForResource"
+                "rds:ListTagsForResource",
+                "rds:CreateDBParameterGroup",
+                "rds:DeleteDBParameterGroup",
+                "rds:ModifyDBParameterGroup"
             ],
             "Condition": {
                 "ForAnyValue:StringEquals": {
