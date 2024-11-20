@@ -280,6 +280,14 @@
         "arn:aws:s3:::${DATALAKE_BUCKET}/tmp/*"
       ],
       "Effect": "Allow"
+    },
+    {
+      "Sid": "externalsecrets",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": "*"
     }
   ]
 }
