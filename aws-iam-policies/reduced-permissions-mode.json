@@ -109,7 +109,7 @@
             "Resource": [
                 "arn:aws:iam::*:instance-profile/env-*-dwx-stack-NodeInstanceProfile-*",
                 "arn:aws:iam::*:role/env-*-dwx-stack-EKSServiceRole-*",
-                "arn:aws:iam::*:role/env-*-dwx-stack-NodeInstanceRole-*"
+                "arn:aws:iam::*:role/env-*-dwx-stack-NodeInstanceRole"
             ]
         },
         {
