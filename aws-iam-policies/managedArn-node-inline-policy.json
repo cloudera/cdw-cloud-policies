@@ -280,6 +280,22 @@
         "arn:aws:s3:::${DATALAKE_BUCKET}/tmp/*"
       ],
       "Effect": "Allow"
+    },
+    {
+      "Sid": "kube2iam",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeRegions"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "externalsecrets",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": "*"
     }
   ]
 }
