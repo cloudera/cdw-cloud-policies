@@ -88,7 +88,8 @@
                 "rds:ListTagsForResource",
                 "rds:CreateDBParameterGroup",
                 "rds:DeleteDBParameterGroup",
-                "rds:ModifyDBParameterGroup"
+                "rds:ModifyDBParameterGroup",
+                "rds:DescribeDBParameterGroups"
             ],
             "Condition": {
                 "ForAnyValue:StringEquals": {
