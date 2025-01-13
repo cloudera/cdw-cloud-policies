@@ -253,13 +253,17 @@
       "Action": [
         "s3:PutObject",
         // Put cf template in SDX bucket
+        // Operations on Log Bucket
         "s3:GetObject"
         // Get cf template while cf stack creation may
         // not be needed for reduced mode
+        // Operations on Log Bucket
       ],
       "Resource": [
         "arn:aws:s3:::${DATALAKE_BUCKET}/cf-templates/*",
-        "arn:aws:s3:::${DATALAKE_BUCKET}/backup/*"
+        "arn:aws:s3:::${DATALAKE_BUCKET}/backup/*",
+        "arn:aws:s3:::${LOG_BUCKET}/*"
+        // Add the above bucket if you are using a separate log bucket
       ]
     },
     {
