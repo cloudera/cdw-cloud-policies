@@ -262,7 +262,7 @@
       "Resource": [
         "arn:aws:s3:::${DATALAKE_BUCKET}/cf-templates/*",
         "arn:aws:s3:::${DATALAKE_BUCKET}/backup/*",
-        "arn:aws:s3:::${LOG_BUCKET}/*"
+        "arn:aws:s3:::${LOG_BUCKET}/cdw/*"
         // Add the above bucket if you are using a separate log bucket
       ]
     },
