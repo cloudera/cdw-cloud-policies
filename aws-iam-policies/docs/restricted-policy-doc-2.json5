@@ -143,9 +143,10 @@
         // Required by Cloudformation to create RDS Parameter Group
         "rds:DeleteDBParameterGroup",
         // Required by Cloudformation to delete RDS Parameter Group
-        "rds:ModifyDBParameterGroup"
+        "rds:ModifyDBParameterGroup",
         // Required by Cloudformation to modify RDS Parameter Group
-
+        "rds:DescribeDBParameterGroups"
+        // Required by Cloudformation while creating RDS Parameter Group
       ],
       "Condition": {
         "ForAnyValue:StringEquals": {
