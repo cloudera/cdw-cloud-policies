@@ -105,7 +105,9 @@
                 "ec2:CreateTags",
                 "ec2:DeleteTags",
                 "ec2:CreateKeyPair",
-                "ec2:DescribeInstanceTypes"
+                "ec2:DescribeInstanceTypes",
+                "kms:GenerateDataKey",
+                "kms:Encrypt"
             ],
             "Resource": "*"
         },

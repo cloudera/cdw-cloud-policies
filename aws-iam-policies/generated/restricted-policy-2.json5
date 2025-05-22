@@ -131,7 +131,6 @@
                 "kms:DeleteAlias",
                 "kms:DescribeKey",
                 "kms:EnableKeyRotation",
-                "kms:GenerateDataKey",
                 "kms:GenerateDataKeyWithoutPlaintext",
                 "kms:ScheduleKeyDeletion"
             ],
