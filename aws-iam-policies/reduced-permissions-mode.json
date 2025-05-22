@@ -121,7 +121,9 @@
             ],
             "Resource": [
                 "arn:aws:s3:::${DATALAKE_BUCKET}/cf-templates/*",
-                "arn:aws:s3:::${DATALAKE_BUCKET}/backup/*"
+                "arn:aws:s3:::${DATALAKE_BUCKET}/backup/*",
+                "arn:aws:s3:::${LOG_BUCKET}/cdw/*",
+                "arn:aws:s3:::${BACKUP_BUCKET}/*"
             ]
         },
         {
