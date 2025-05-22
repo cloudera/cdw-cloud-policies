@@ -204,9 +204,13 @@
         // Create ssh Public key pair, pass to ec2
         // instances. Not required if passed/set/
         // reused via CB
-        "ec2:DescribeInstanceTypes"
+        "ec2:DescribeInstanceTypes",
         // validate whether instance type is supported in a
         // region or not
+        "kms:GenerateDataKey",
+        // required to store the CF template in S3
+        "kms:Encrypt"
+        // required to encrypt CF template in S3
       ],
       "Resource": "*"
     },

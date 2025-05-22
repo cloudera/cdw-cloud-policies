@@ -204,9 +204,6 @@
         // activation
         "kms:EnableKeyRotation",
         // Allow rotation of kms key after expiration
-        "kms:GenerateDataKey",
-        // Returns unique symmetric data key in plain
-        // text for use outside AWS KMS
         "kms:GenerateDataKeyWithoutPlaintext",
         // Return unique symmetric encrypted data key
         // for use outside of AWS KMS
