@@ -190,6 +190,9 @@
         // List policies attached to Ranger RAZ
         // role; attach to NodeInstanceRole for
         // S3 access if RAZ enabled and also to add cloudwatch access
+        "iam:ListRoles",
+        // List Roles to find out all the roles names  that match a pattern
+        // It is used when load AccessEntry policies
         "ec2:DescribeVpcAttribute",
         // Validate enableDnsHostnames and
         // enableDnsSupport VPC attributes;
@@ -240,6 +243,27 @@
       ],
       "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks"
     },
+    {
+      "Sid": "gocodeEKSAccessEntries",
+      "Effect": "Allow",
+      "Action": [
+        "eks:CreateAccessEntry",
+        // Creates an access entry
+        "eks:DeleteAccessEntry",
+        // Deletes an access entry
+        "eks:DescribeAccessEntry",
+        // Describes an access entry
+         "eks:ListAccessEntries",
+        // Lists access Entries
+        "eks:AssociateAccessPolicy",
+        // Associates an access policy and its scope to an access entry
+        "eks:DisassociateAccessPolicy",
+        // Removes an access policy from an existing access entry
+        "eks:ListAssociatedAccessPolicies"
+        // Lists the access policies associated with an access entry
+      ],
+      "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks"
+     },
     {
       "Sid": "S3full",
       "Effect": "Allow",
