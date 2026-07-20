@@ -99,6 +99,20 @@
             ]
         },
         {
+            "Sid": "gocodeEKSAccessEntries",
+            "Effect": "Allow",
+            "Action": [
+                "eks:CreateAccessEntry",
+                "eks:DeleteAccessEntry",
+                "eks:DescribeAccessEntry",
+                "eks:ListAccessEntries",
+                "eks:AssociateAccessPolicy",
+                "eks:DisassociateAccessPolicy",
+                "eks:ListAssociatedAccessPolicies"
+            ],
+            "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks"
+        },
+        {
             "Sid": "Role",
             "Effect": "Allow",
             "Action": [
@@ -142,6 +156,7 @@
                 "ec2:DescribeVpcs",
                 "ec2:DescribeInstanceTypes",
                 "iam:ListAttachedRolePolicies",
+                "iam:ListRoles",
                 "iam:SimulatePrincipalPolicy",
                 "s3:GetBucketLocation",
                 "s3:ListBucket",
