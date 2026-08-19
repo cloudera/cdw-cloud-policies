@@ -95,7 +95,8 @@
             "Action": [
                 "eks:DescribeUpdate",
                 "eks:UpdateClusterConfig",
-                "eks:UpdateClusterVersion"
+                "eks:UpdateClusterVersion",
+                "eks:DescribeCluster"
             ]
         },
         {
