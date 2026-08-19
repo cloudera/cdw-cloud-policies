@@ -125,7 +125,8 @@
             "Action": [
                 "eks:UpdateClusterConfig",
                 "eks:UpdateClusterVersion",
-                "eks:DescribeUpdate"
+                "eks:DescribeUpdate",
+                "eks:DescribeCluster"
             ],
             "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks"
         },
