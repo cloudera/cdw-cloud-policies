@@ -234,9 +234,12 @@
         "eks:UpdateClusterVersion",
         // Updates an Amazon EKS cluster to
         // the specified Kubernetes version.
-        "eks:DescribeUpdate"
+        "eks:DescribeUpdate",
         // Check status of Updates--enable
         // Private EKS and Cloudwatch on EKS
+        "eks:DescribeCluster"
+        // Check the cluster's authentication mode
+        // to ensure it is not deprecated.
       ],
       "Resource": "arn:aws:eks:*:*:cluster/env-*-dwx-stack-eks"
     },
