@@ -57,6 +57,8 @@
         // Called by CF while creating EFS
         "elasticfilesystem:DescribeFileSystems",
         // Called by CF while creating EFS
+        "elasticfilesystem:DescribeReplicationConfigurations",
+        // Called by CF when deleting EFS
         "rds:DescribeEngineDefaultParameters"
         // Describes default parameters of RDS. Required for Cloudformation operations
       ],
