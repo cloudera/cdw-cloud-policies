@@ -25,6 +25,7 @@
                 "ec2:DeletePlacementGroup",
                 "elasticfilesystem:DescribeMountTargets",
                 "elasticfilesystem:DescribeFileSystems",
+                "elasticfilesystem:DescribeReplicationConfigurations",
                 "rds:DescribeEngineDefaultParameters"
             ],
             "Resource": "*",
